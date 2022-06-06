@@ -1,4 +1,3 @@
-from nis import cat
 from PySimpleGUI import PySimpleGUI as sg
 import socket
 import threading
