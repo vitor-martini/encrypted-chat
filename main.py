@@ -3,7 +3,6 @@ import socket
 import threading
 
 def start_server():
-    IP = str(socket.gethostbyname_ex(socket.getfqdn())[2]).replace("'","").replace("[","").replace("]","")
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((IP, 3000))
     s.listen()
@@ -30,11 +29,12 @@ def update_chat(message):
     janela.find_element('chat').update(values = chat)
 
 chat = []
+IP = str(socket.gethostbyname_ex(socket.getfqdn())[2]).replace("'","").replace("[","").replace("]","")
 server = threading.Thread(target=start_server)
 server.start()
 
 layout = [
-    [sg.Text('IP:'), sg.Input(key='ip', do_not_clear=True, size=(25,25)), sg.Button('Conectar', key='conectar')],
+    [sg.Text('Meu IP:' + IP), sg.Text('IP:'), sg.Input(key='ip', do_not_clear=True, size=(25,25)), sg.Button('Conectar', key='conectar')],
     [sg.Listbox(key='chat', values = chat, size=(112, 25))],
     [sg.Input(key='mensagem', do_not_clear=False, size=(106,25)), sg.Button('Enviar', key='enviar')]
 ]
