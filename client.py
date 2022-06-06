@@ -1,5 +1,5 @@
 import socket
-IP = input('HOST IP: ')
+IP = '192.168.15.7'
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((IP, 3000))
 
