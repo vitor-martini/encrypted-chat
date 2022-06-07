@@ -12,6 +12,7 @@ def decrypt(method, key, message):
     try:
         if method == 'RC4':
             return RC4.decrypt(key,  message)
+        return message
     except:
         return message
 
@@ -33,7 +34,6 @@ def start_server(IP, chat, window):
         server.close()
     except:
         update_status(window, 'offline')
-        quit()
 
 def connect_client(client_socket, IP):
     try:
@@ -102,7 +102,7 @@ def main():
         events, values = window.read()   
         if events == sg.WINDOW_CLOSED:
             break
-        if events == 'start_server':          
+        if events == 'start_server' and window['status_server'].DisplayText == 'offline':          
             thread_server(IP, chat, window)  
         if events == 'encryption_method':
             update_key(values['encryption_method'], window)
