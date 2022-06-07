@@ -51,4 +51,4 @@ def main():
     print('cifrado: ' + ecrypted)
     print('descifrado: ' + decrypted)
     
-main()
+# main()
