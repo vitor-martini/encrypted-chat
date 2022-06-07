@@ -1,6 +1,17 @@
 from PySimpleGUI import PySimpleGUI as sg
+import RC4
 import socket
 import threading
+
+def encrypt(method, key, message):
+    if method == 'RC4':
+        return RC4.encrypt(key,  message)
+    return message
+
+def decrypt(method, key, message):
+    if method == 'RC4':
+        return RC4.decrypt(key,  message)
+    return message
 
 def start_server(IP, chat, window):
     try:
@@ -12,7 +23,8 @@ def start_server(IP, chat, window):
         server, addr = server_socket.accept()
         while 1:
             data = server.recv(1024)
-            update_chat(data.decode('utf-8'), chat, window)
+            decrypted_message = decrypt(values['encryption_method'], values['key'], data.decode('utf-8'))
+            update_chat(decrypted_message, chat, window)
             if not data:
                 break
             server.sendall(data)
@@ -31,8 +43,10 @@ def connect_client(client_socket, IP):
 def send_message(client_socket, IP, message, chat, window):
     try:
         message = IP + ': ' + message
-        update_chat(message, chat, window)
-        client_socket.sendall(bytes(message, 'utf-8'))
+        encrypted_message = encrypt(values['encryption_method'], values['key'], message)
+        decrypted_message = decrypt(values['encryption_method'], values['key'], encrypted_message)
+        update_chat(decrypted_message, chat, window)
+        client_socket.sendall(bytes(encrypted_message, 'utf-8'))
     except: 
         sg.popup('Erro de conexão!', title = 'Erro', icon='padlock_closed.ico')
     
@@ -47,7 +61,7 @@ def create_layout(IP, chat):
     layout = [
         [sg.Text('Meu IP: ' + IP), sg.Button('Hostear', key='start_server'), sg.Text('Status servidor:'), sg.Text('offline', key = 'status_server')],
         [sg.Text('IP:'), sg.Input(key='ip', do_not_clear=True, size=(25,25)), sg.Text('Criptografia:'), 
-         sg.Combo(key='combo', values=['S-DES', 'RC4'], enable_events=True), sg.Text('Chave:'), sg.Input(key='key', do_not_clear=True, size=(25,25)), sg.Button('Conectar', key='connect')],
+         sg.Combo(key='encryption_method', values=['S-DES', 'RC4'], enable_events=True), sg.Text('Chave:'), sg.Input(key='key', do_not_clear=True, size=(25,25)), sg.Button('Conectar', key='connect')],
         [sg.Listbox(key='chat', values = chat, size=(112, 25))],
         [sg.Input(key='message', do_not_clear=False, size=(106,25)), sg.Button('Enviar', key='send')]
     ]
@@ -82,13 +96,14 @@ def main():
     thread_server(IP, chat, window)                 
        
     while True:
+        global events, values
         events, values = window.read()   
         if events == sg.WINDOW_CLOSED:
             break
         if events == 'start_server':          
             thread_server(IP, chat, window)  
-        if events == 'combo':
-            update_key(values['combo'], window)
+        if events == 'encryption_method':
+            update_key(values['encryption_method'], window)
         if events == 'connect':
             connect_client(client_socket, values['ip'])
         if events == 'send':
