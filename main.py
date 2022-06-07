@@ -9,11 +9,13 @@ def encrypt(method, key, message):
     return message
 
 def decrypt(method, key, message):
-    if method == 'RC4':
-        return RC4.decrypt(key,  message)
-    return message
+    try:
+        if method == 'RC4':
+            return RC4.decrypt(key,  message)
+    except:
+        return message
 
-def start_server(IP, chat, window):
+def start_server(IP, chat, window):  
     try:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.bind((IP, 3000))
@@ -36,9 +38,9 @@ def start_server(IP, chat, window):
 def connect_client(client_socket, IP):
     try:
         client_socket.connect((IP, 3000))
-        sg.popup('Conexão feita com sucesso!', title = 'Sucesso', icon='padlock_closed.ico')    
+        sg.popup('Conexão com a outra máquina feita com sucesso!', title = 'Sucesso', icon='padlock_closed.ico')    
     except: 
-        sg.popup('Erro de conexão!', title = 'Erro', icon='padlock_closed.ico')
+        sg.popup('Erro de conexão com a outra máquina!', title = 'Erro', icon='padlock_closed.ico')
     
 def send_message(client_socket, IP, message, chat, window):
     try:
@@ -48,7 +50,7 @@ def send_message(client_socket, IP, message, chat, window):
         update_chat(decrypted_message, chat, window)
         client_socket.sendall(bytes(encrypted_message, 'utf-8'))
     except: 
-        sg.popup('Erro de conexão!', title = 'Erro', icon='padlock_closed.ico')
+        sg.popup('Erro de conexão com a outra máquina!', title = 'Erro', icon='padlock_closed.ico')
     
 def update_chat(message, chat, window):
     chat.append(message)   
