@@ -18,10 +18,12 @@ def main():
         if events == 'start_server' and window['status_server'].DisplayText == 'offline':        
             thread_server(IP, chat, window) 
         if events == 'encryption_method':
-            update_key(values['encryption_method'], window)            
+            key = update_key(values['encryption_method'], window)
+            update_encryption(values['encryption_method'], key)
+        if events == 'key':
+            update_encryption(values['encryption_method'], values['key'])
         if events == 'send':
             try:
-                update_encryption(values['encryption_method'], values['key'])
                 send_message(IP, values['client_ip'], values['message'], chat, window)
             except:
                 sg.popup('Informe o IP da máquina que deseja conectar!', title = 'Erro', icon='padlock_closed.ico')
