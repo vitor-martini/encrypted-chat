@@ -26,7 +26,6 @@ def start_server(IP, chat, window):
             
             server.sendall(data)
         server.close()
-        update_status(window, 'offline')
     except:
         update_status(window, 'offline')
 
