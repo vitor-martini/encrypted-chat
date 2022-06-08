@@ -22,15 +22,17 @@ def start_server(IP, chat, window):
         server_socket.bind((IP, 3000))
         server_socket.listen()
         update_status(window, 'online')
-
+           
         server, addr = server_socket.accept()
-        while 1:
+        while True:            
             data = server.recv(1024)
             decrypted_message = decrypt(values['encryption_method'], values['key'], data.decode('utf-8'))
-            update_chat(decrypted_message, chat, window)
+            update_chat(decrypted_message, chat, window) 
+                        
             if not data:
                 break
             server.sendall(data)
+        server.shutdown()
         server.close()
     except:
         update_status(window, 'offline')
@@ -61,7 +63,7 @@ def update_status(window, status):
 
 def create_layout(IP, chat):    
     layout = [
-        [sg.Text('Meu IP: ' + IP), sg.Button('Hostear', key='start_server'), sg.Text('Status servidor:'), sg.Text('offline', key = 'status_server')],
+        [sg.Text('Meu IP: ' + IP), sg.Button('Hostear', key='start_server'), sg.Button('Encerrar', key='close_connection'), sg.Text('Status servidor:'), sg.Text('offline', key = 'status_server')],
         [sg.Text('IP:'), sg.Input(key='ip', do_not_clear=True, size=(25,25)), sg.Text('Criptografia:'), 
          sg.Combo(key='encryption_method', values=['S-DES', 'RC4'], enable_events=True), sg.Text('Chave:'), sg.Input(key='key', do_not_clear=True, size=(25,25)), sg.Button('Conectar', key='connect')],
         [sg.Listbox(key='chat', values = chat, size=(112, 25))],
@@ -82,15 +84,16 @@ def get_current_ip():
     s.close()
     return IP
 
-def thread_server(IP, chat, window):
-    server = threading.Thread(target=start_server, args=(IP, chat, window,))
+def thread_server(IP, chat, window, q):
+    server = threading.Thread(target=start_server, args=(IP, chat, window, q,))
     server.start()
                 
 def main():
+    global close
     chat = []
     IP = get_current_ip()    
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+    
     # Layout
     layout = create_layout(IP, chat)
     window = sg.Window('Encrypted chat', layout, icon='padlock_closed.ico', finalize=True)
@@ -104,6 +107,8 @@ def main():
             break
         if events == 'start_server' and window['status_server'].DisplayText == 'offline':          
             thread_server(IP, chat, window)  
+        if events == 'close_connection':
+            q.put(True)
         if events == 'encryption_method':
             update_key(values['encryption_method'], window)
         if events == 'connect':

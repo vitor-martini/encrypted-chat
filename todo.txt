@@ -1,0 +1,2 @@
+- Botão "conectar" do lado do texto de IP
+- Criar botão "atualizar" para o tipo de criptografia e chave
