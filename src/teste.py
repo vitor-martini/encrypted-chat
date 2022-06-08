@@ -42,3 +42,4 @@ string_again = toString(binary)
 print(plaintext)
 print(binary)
 print(string_again)
+#teste
