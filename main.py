@@ -64,8 +64,8 @@ def start_server(IP, chat, window):
         server_socket.listen()
         update_status(window, 'online')
            
-        server, addr = server_socket.accept()
         while True:    
+            server, addr = server_socket.accept()
             data = server.recv(1024)
             if data.decode('utf-8') == 'exit':
                 break
@@ -102,8 +102,8 @@ def send_message(client_socket, IP, message, chat, window):
         message = IP + ': ' + message
         encrypted_message = encrypt(method, key, message)
         decrypted_message = decrypt(method, key, encrypted_message)
-        update_chat(decrypted_message, chat, window)
         client_socket.sendall(bytes(encrypted_message, 'utf-8'))
+        update_chat(decrypted_message, chat, window)
     except: 
         sg.popup('Erro de conexão!', title = 'Erro', icon='padlock_closed.ico')
     
@@ -115,7 +115,6 @@ def get_current_ip():
     return IP
 # ------------- Client/Server ------------- 
            
-
 def main():
     global method, key
     method = ''
