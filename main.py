@@ -44,10 +44,10 @@ def update_encryption(_method, _key):
 def create_layout(IP, chat):    
     layout = [
         [sg.Text('Meu IP: ' + IP), sg.Text('Status servidor:'), sg.Text('offline', key = 'status_server', text_color='firebrick'), sg.Button('Hostear', key='start_server', size=(10,1)), sg.Button('Encerrar', key='stop_server', size=(10,1))],
-        [sg.Text('IP:'), sg.Input(key='ip', do_not_clear=True, size=(49,25)), sg.Button('Conectar', key='connect', size=(10,1))],
-        [sg.Text('Criptografia:'), sg.Combo(key='encryption_method', values=['S-DES', 'RC4'], enable_events=True, size=(10,1)), sg.Text('Chave:'), sg.Input(key='key', do_not_clear=True, size=(20,25)), sg.Button('Aplicar', key='apply', size=(10,1))],
-        [sg.Listbox(key='chat', values = chat, size=(65, 25))],
-        [sg.Input(key='message', do_not_clear=False, size=(53,25)), sg.Button('Enviar', key='send', size=(10,1))]
+        [sg.Text('IP:'), sg.Input(key='ip', do_not_clear=True, size=(53,25)), sg.Button('Conectar', key='connect', size=(10,1))],
+        [sg.Text('Criptografia:'), sg.Combo(key='encryption_method', values=['S-DES', 'RC4'], enable_events=True, size=(10,1)), sg.Text('Chave:'), sg.Input(key='key', do_not_clear=True, size=(23,25)), sg.Button('Aplicar', key='apply', size=(10,1))],
+        [sg.Listbox(key='chat', values = chat, size=(70, 25))],
+        [sg.Input(key='message', do_not_clear=False, size=(56,25)), sg.Button('Enviar', key='send', size=(10,1))]
     ]
     return layout
 # ------------- Layout Actions ------------- 
