@@ -42,13 +42,13 @@ def decrypt(key, cipher_text):
     decrypted_text = encrypt(key, cipher_text, True)
     return codecs.decode(decrypted_text, 'hex_codec').decode('utf-8')
 
-def main():
-    plaintext = input('plaintext: ')
-    key = input('key: ')
-    ecrypted = encrypt(key, plaintext)
-    decrypted = decrypt(key, ecrypted)
+# def main():
+#     plaintext = input('plaintext: ')
+#     key = input('key: ')
+#     ecrypted = encrypt(key, plaintext)
+#     decrypted = decrypt(key, ecrypted)
 
-    print('cifrado: ' + ecrypted)
-    print('descifrado: ' + decrypted)
+#     print('cifrado: ' + ecrypted)
+#     print('descifrado: ' + decrypted)
     
 # main()
