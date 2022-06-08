@@ -124,12 +124,13 @@ def main():
 
     layout = create_layout(IP, chat)
     window = sg.Window('Encrypted chat', layout, icon='padlock_closed.ico', finalize=True)
-                     
+
     while True:
         events, values = window.read()   
         if events == sg.WINDOW_CLOSED:
+            if window['status_server'].DisplayText == 'online': stop_server(IP)
             break
-        if events == 'start_server' and window['status_server'].DisplayText == 'offline':          
+        if events == 'start_server' and window['status_server'].DisplayText == 'offline':        
             thread_server(IP, chat, window) 
         if events == 'stop_server' and window['status_server'].DisplayText == 'online':          
             stop_server(IP)
