@@ -1,2 +1,1 @@
-- Botão "conectar" do lado do texto de IP
-- Criar botão "atualizar" para o tipo de criptografia e chave
+- Se ja estou conectado a uma máquina, não consigo conectar a outra
