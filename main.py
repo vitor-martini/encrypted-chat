@@ -85,7 +85,7 @@ def get_current_ip():
     return IP
 
 def thread_server(IP, chat, window):
-    server = threading.Thread(target=start_server, args=(IP, chat, window, q,))
+    server = threading.Thread(target=start_server, args=(IP, chat, window,))
     server.start()
                 
 def main():
