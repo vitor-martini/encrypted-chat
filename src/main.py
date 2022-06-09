@@ -23,9 +23,6 @@ def main():
         if events == 'key':
             update_encryption(values['encryption_method'], values['key'])
         if events == 'send':
-            try:
-                send_message(IP, values['client_ip'], values['message'], chat, window)
-            except:
-                sg.popup('Informe o IP da máquina que deseja conectar!', title = 'Erro', icon='padlock_closed.ico')
+            send_message(IP, values['client_ip'], values['message'], chat, window)
                 
 main()
