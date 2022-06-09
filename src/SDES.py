@@ -1,3 +1,5 @@
+import math
+
 S0 = [[ 1, 0, 3, 2],
       [3, 2, 1, 0],
       [0, 2, 1, 3],
@@ -18,12 +20,26 @@ def generate_keys(key):
     key_2 = P8(shift(shift(key)))
 
 def encrypt(key, plain_text):
-    generate_keys(key)
-    return reverse_IP(F(swap(F(IP(plain_text), key_1)), key_2))
+    binary = string_to_binary(plain_text)
+    list_of_bytes = binary_to_list(binary)
+    encrypted_text = ""
 
-def decrypt(key, plain_text):
     generate_keys(key)
-    return reverse_IP(F(swap(F(IP(plain_text), key_2)), key_1))
+    for bytes in list_of_bytes:
+        encrypted_text += reverse_IP(F(swap(F(IP(bytes), key_1)), key_2))
+
+    return binary_to_string(encrypted_text)
+
+def decrypt(key, encrypted_text):
+    encrypted_text = string_to_binary(encrypted_text)
+    list_of_bytes = binary_to_list(encrypted_text)
+    decrypted_text = ""
+
+    generate_keys(key)
+    for bytes in list_of_bytes:
+        decrypted_text += reverse_IP(F(swap(F(IP(bytes), key_2)), key_1))
+
+    return binary_to_string(decrypted_text)
 
 def P10(key):    
     permutated_key = (
@@ -151,16 +167,43 @@ def reverse_IP(message):
         message[5])
     return permutated_message
 
-# def main():
-#     plaintext = input('plaintext: ')
-#     key = input('key: ')
-#     ecrypted = encrypt(key, plaintext)
-#     decrypted = decrypt(key, ecrypted)
+def string_to_binary(text):  
+    ascii_table, result = [], []
 
-#     print('cifrado: ' + ecrypted)
-#     print('descifrado: ' + decrypted)
+    for character in text:
+        ascii_table.append(ord(character))
 
+    for i in ascii_table:
+        result.append(str(bin(i)[2:])[::-1].ljust(8, "0")[::-1])
 
+    return ''.join(result)
 
+def binary_to_list(binary):
+    list_of_bytes = []
+    i = 0
+    while i < len(binary):
+        list_of_bytes.append(binary[i:i+8])
+        i += 8
 
-# main()
+    return list_of_bytes
+
+def binary_to_string(text):
+    ascii_table = []
+    list_of_bytes = binary_to_list(text)
+    result = ""
+
+    for i in list_of_bytes:
+        aux, ascii_character = 0, 0
+        i = int(i)
+        k = int(math.log10(i)) + 1
+
+        for j in range(k):
+            aux = ((i % 10) * (2**j))   
+            i = i // 10
+            ascii_character = ascii_character + aux
+
+        ascii_table.append(ascii_character)
+
+    for ascii_character in ascii_table:
+        result += chr(ascii_character)
+    return result

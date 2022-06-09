@@ -1,5 +1,5 @@
 from PySimpleGUI import PySimpleGUI as sg
-from client_server import get_current_ip, thread_server, stop_server, connect_client, send_message
+from client_server import get_current_ip, thread_server, stop_server, send_message
 from layout import create_layout, update_key, update_encryption
            
 def main():
