@@ -2,11 +2,14 @@ import RC4
 import SDES
 
 def encrypt(method, key, message):
-    if method == 'RC4':
-        return RC4.encrypt(key,  message)
-    if method == 'S-DES':
-        return SDES.encrypt(key,  message)
-    return message
+    try:
+        if method == 'RC4':
+            return RC4.encrypt(key,  message)
+        if method == 'S-DES':
+            return SDES.encrypt(key,  message)
+        return message
+    except:
+        return message
 
 def decrypt(method, key, message):
     try:
