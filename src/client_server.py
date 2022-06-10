@@ -18,13 +18,15 @@ def start_server(IP, chat, window):
            
         while True:    
             server, addr = server_socket.accept()
+            client_IP = addr[0]
             data = server.recv(1024)
             if data.decode('utf-8') == 'exit':
                 break
-            decrypted_message = decrypt(layout.method, layout.key, data.decode('utf-8'))
-            update_chat(decrypted_message, chat, window)             
-            
             server.sendall(data)
+            
+            decrypted_message = client_IP + ': ' + decrypt(layout.method, layout.key, data.decode('utf-8')) 
+            update_chat(decrypted_message, chat, window)      
+
         server.close()
     except:
         update_status(window, 'offline')
@@ -34,24 +36,24 @@ def stop_server(IP):
     server_socket.connect((IP, 3000))
     server_socket.sendall(bytes('exit', 'utf-8'))
 
-def connect_client(IP, IP_cliente):
-    if IP == IP_cliente:
-        sg.popup('Informe outro IP!', title = 'Erro', icon='padlock_closed.ico')
-        return 
+def connect_client(IP, client_IP):
+    # if IP == client_IP:
+    #     sg.popup('Informe outro IP!', title = 'Erro', icon='padlock_closed.ico')
+    #     return 
         
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((IP_cliente, 3000))
+    client_socket.connect((client_IP, 3000))
     return client_socket
     
-def send_message(IP, IP_cliente, message, chat, window):
+def send_message(IP, client_IP, message, chat, window):
     try:        
-        client_socket = connect_client(IP, IP_cliente)
-
-        message = IP + ': ' + message        
+        client_socket = connect_client(IP, client_IP)
+   
         encrypted_message = encrypt(layout.method, layout.key, message)
         decrypted_message = decrypt(layout.method, layout.key, encrypted_message)
 
         client_socket.sendall(bytes(encrypted_message, 'utf-8'))
+        decrypted_message = client_IP + ': ' + decrypted_message
         update_chat(decrypted_message, chat, window)
     except: 
         sg.popup('Erro de conexão!', title = 'Erro', icon='padlock_closed.ico')

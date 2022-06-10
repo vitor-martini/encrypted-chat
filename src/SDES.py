@@ -1,4 +1,4 @@
-import math
+from binary_operations import string_to_binary, binary_to_list, binary_to_string, XOR, int_to_binary
 
 S0 = [[ 1, 0, 3, 2],
       [3, 2, 1, 0],
@@ -90,23 +90,6 @@ def expansion(message):
         message[0])
     return message_expanded
 
-def XOR(left, right):    
-    result = ""
-    for i in range(len(left)):
-        if (left[i]== '1' and right[i]== '0') or (left[i]== '0' and right[i]== '1'): result += '1'        
-        else: result += '0'    
-
-    return result
-
-def int_to_binary(i):       
-    binary = ""    
-    if(i == 0): binary = "00"    
-    if(i == 1): binary = "01"    
-    if(i == 2): binary = "10"
-    if(i == 3): binary = "11"
-
-    return binary
-
 def blocks(message):
     
     message_left = message[0:4]    
@@ -145,47 +128,6 @@ def reverse_IP(message):
         message[5])
     return permutated_message
 
-def string_to_binary(text):  
-    ascii_table, result = [], []
-
-    for character in text:
-        ascii_table.append(ord(character))
-
-    for i in ascii_table:
-        result.append(str(bin(i)[2:])[::-1].ljust(8, "0")[::-1])
-
-    return ''.join(result)
-
-def binary_to_list(binary):
-    list_of_bytes = []
-    i = 0
-    while i < len(binary):
-        list_of_bytes.append(binary[i:i+8])
-        i += 8
-
-    return list_of_bytes
-
-def binary_to_string(text):
-    ascii_table = []
-    list_of_bytes = binary_to_list(text)
-    result = ""
-
-    for i in list_of_bytes:
-        aux, ascii_character = 0, 0
-        i = int(i)
-        k = int(math.log10(i)) + 1
-
-        for j in range(k):
-            aux = ((i % 10) * (2**j))   
-            i = i // 10
-            ascii_character = ascii_character + aux
-
-        ascii_table.append(ascii_character)
-
-    for ascii_character in ascii_table:
-        result += chr(ascii_character)
-    return result
-
 def SDES(message, key_1, key_2):
     return reverse_IP(F(swap(F(IP(message), key_1)), key_2))
 
@@ -206,27 +148,5 @@ def decrypt(key, encrypted_message):
 
     for bytes in encrypted_message:
         decrypted_message.append(SDES(bytes, key_2, key_1))
-
-    return binary_to_string("".join(decrypted_message))
-
-def CBC_encrypt(key, message):
-    generate_keys(key)
-    IV = '10101010'
-    binary_message = binary_to_list(string_to_binary(message))
-    encrypted_message = [SDES(XOR(binary_message[0], IV), key_1, key_2)]
-
-    for i in range(1, len(binary_message)):
-        encrypted_message.append(SDES(XOR(binary_message[i], encrypted_message[i-1]), key_1, key_2))
-
-    return "".join(encrypted_message)
-
-def CBC_decrypt(key, encrypted_message):
-    generate_keys(key)
-    IV = '10101010'
-    encrypted_message = binary_to_list(encrypted_message)
-    decrypted_message = [XOR(SDES(encrypted_message[0], key_2, key_1), IV)]
-
-    for i in range(1, len(encrypted_message)):
-        decrypted_message.append(XOR(SDES(encrypted_message[i], key_2, key_1), encrypted_message[i-1]))
 
     return binary_to_string("".join(decrypted_message))
