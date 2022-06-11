@@ -128,7 +128,7 @@ def reverse_IP(message):
         message[5])
     return permutated_message
 
-def SDES(message, key_1, key_2):
+def SDES_function(message, key_1, key_2):
     return reverse_IP(F(swap(F(IP(message), key_1)), key_2))
 
 def encrypt(key, message):
@@ -137,7 +137,7 @@ def encrypt(key, message):
     encrypted_message = []
 
     for bytes in list_of_bytes:
-        encrypted_message.append(SDES(bytes, key_1, key_2))
+        encrypted_message.append(SDES_function(bytes, key_1, key_2))
 
     return "".join(encrypted_message)
 
@@ -147,6 +147,6 @@ def decrypt(key, encrypted_message):
     decrypted_message = []
 
     for bytes in encrypted_message:
-        decrypted_message.append(SDES(bytes, key_2, key_1))
+        decrypted_message.append(SDES_function(bytes, key_2, key_1))
 
     return binary_to_string("".join(decrypted_message))
