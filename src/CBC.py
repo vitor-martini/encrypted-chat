@@ -1,8 +1,11 @@
-from SDES import generate_keys, SDES_function, XOR
+from SDES import generate_keys, SDES_function, XOR, validade_key, correct_key
 import SDES
 from binary_operations import binary_to_list,  binary_to_string, string_to_binary
 
 def encrypt(key, message):
+    key = str(key)
+    if validade_key(key) == False:
+        key = correct_key(key)
     generate_keys(key)
     IV = '10101010'
     binary_message = binary_to_list(string_to_binary(message))
@@ -14,6 +17,9 @@ def encrypt(key, message):
     return "".join(encrypted_message)
 
 def decrypt(key, encrypted_message):
+    key = str(key)
+    if validade_key(key) == False:
+        key = correct_key(key)
     generate_keys(key)
     IV = '10101010'
     encrypted_message = binary_to_list(encrypted_message)

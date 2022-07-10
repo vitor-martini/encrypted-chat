@@ -27,6 +27,7 @@ def PRGA(S):
         yield K
 
 def encrypt(key, text, decrypt=False):
+    key = str(key)
     if decrypt == False: text = [ord(byte) for byte in text]
     key = [ord(byte) for byte in key]    
     keystream = PRGA(KSA(key))
@@ -38,6 +39,7 @@ def encrypt(key, text, decrypt=False):
     return ''.join(cipher_text)
 
 def decrypt(key, cipher_text):
+    key = str(key)
     cipher_text = codecs.decode(cipher_text, 'hex_codec')
     decrypted_text = encrypt(key, cipher_text, True)
     return codecs.decode(decrypted_text, 'hex_codec').decode('utf-8')

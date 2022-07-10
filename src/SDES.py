@@ -131,7 +131,30 @@ def reverse_IP(message):
 def SDES_function(message, key_1, key_2):
     return reverse_IP(F(swap(F(IP(message), key_1)), key_2))
 
+def validade_key(key):
+    try:
+        if len(key) != 10:
+            return False 
+
+        for bit in key:
+            if int(bit) not in [0, 1]:
+                return False
+    except:
+        return False 
+
+def correct_key(key):
+    key = string_to_binary(key)
+    if len(key) > 10:
+        key = key[0:10]
+    while len(key) < 10:
+        key = "0" + key
+
+    return key
+
 def encrypt(key, message):
+    key = str(key)
+    if validade_key(key) == False:
+        key = correct_key(key)
     generate_keys(key)
     list_of_bytes = binary_to_list(string_to_binary(message))
     encrypted_message = []
@@ -142,6 +165,9 @@ def encrypt(key, message):
     return "".join(encrypted_message)
 
 def decrypt(key, encrypted_message):
+    key = str(key)
+    if validade_key(key) == False:
+        key = correct_key(key)
     generate_keys(key)
     encrypted_message = binary_to_list(encrypted_message)
     decrypted_message = []
