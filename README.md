@@ -5,6 +5,7 @@ Executar "main.py"
 
 ## Como utilizar?
 Temos o seguinte layout:
+
 ![image](https://user-images.githubusercontent.com/80294295/178164293-5f084398-948f-4588-84cf-95e2daa3f098.png)
 
 - Caso o campo status esteja offline, clique em "Hostear"
